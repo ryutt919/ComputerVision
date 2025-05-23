@@ -9,10 +9,10 @@ def draw_feedback(frame, message, position=(30, 30)):
     message: 출력할 문자열,
     position: 텍스트 시작 좌표 (x, y)
     """
-    cv.putText(frame,
-               message,
-               position,
-               cv.FONT_HERSHEY_SIMPLEX,
-               1.0,         # 글자 크기
-               (0, 0, 255), # 빨간색
-               2)           # 두께
+    # cv.putText(frame,
+    #            message,
+    #            position,
+    #            cv.FONT_HERSHEY_SIMPLEX,
+    #            1.0,         # 글자 크기
+    #            (0, 0, 255), # 빨간색
+    #            2)           # 두께

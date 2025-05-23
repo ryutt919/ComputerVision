@@ -13,19 +13,20 @@ _pose = mp_pose.Pose(static_image_mode=False,
 
 def get_pose_landmarks(frame):
     """
-    frame: BGR 이미지를 받아서 RGB로 변환한 뒤
-           MediaPipe로 33개 랜드마크 좌표(0~32)를 추출하여 
-           {index: (x, y)} 형태로 리턴.
+    2D, 3D 랜드마크를 함께 반환
+    - landmarks_2d: {index: (x, y)}
+    - landmarks_3d: {index: (x, y, z)}
     """
     rgb = cv.cvtColor(frame, cv.COLOR_BGR2RGB)
     results = _pose.process(rgb)
-    landmarks = {}
+    landmarks_2d, landmarks_3d = {}, {}
     if results.pose_landmarks:
         h, w = frame.shape[:2]
         for i, lm in enumerate(results.pose_landmarks.landmark):
-            # 화면 크기에 맞춰 픽셀 좌표로 변환
-            landmarks[i] = (int(lm.x * w), int(lm.y * h))
-    return landmarks
+            landmarks_2d[i] = (int(lm.x * w), int(lm.y * h))
+            landmarks_3d[i] = (lm.x, lm.y, lm.z)
+    return landmarks_2d, landmarks_3d
+
 
 # --- 수정된 부분 시작 ---
 def get_shoulder_center(landmarks):
@@ -52,7 +53,7 @@ def estimate_spine(landmarks):
     hip      = get_hip_center(landmarks)
     if shoulder and hip:
         x = (shoulder[0] + hip[0]) // 2
-        y = (shoulder[1] + hip[1]) // 2
+        y = hip[1]
         return (x, y)
     return None
 

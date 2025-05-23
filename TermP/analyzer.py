@@ -1,13 +1,14 @@
 # analyzer.py
-# 현재 자세가 기준 범위에 있는지 판단하고 메시지를 반환합니다.
-
 from utils import calculate_angle
 
 def evaluate_pushup(landmarks):
-    # 왼쪽 어깨-팔꿈치-손목으로 이뤄진 팔의 각도 측정
+    # 왼팔 관절이 모두 존재할 경우에만 평가 수행
+    required = [11, 13, 15]
+    if not all(k in landmarks for k in required):
+        return "왼팔 관절이 감지되지 않았습니다."
+
     angle = calculate_angle(landmarks[11], landmarks[13], landmarks[15])
     
-    # 기준 각도는 80~100도 사이 (팔이 수직에 가까워야 함)
     if 80 < angle < 100:
         return "정확한 자세입니다."
     else:
